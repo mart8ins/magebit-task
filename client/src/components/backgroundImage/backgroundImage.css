@@ -1,0 +1,13 @@
+.background__image {
+    background-image: url("/public/images/image_summer.png");
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+}
+
+@media screen and (min-width: 576px) {
+    .background__image {
+        background-image: url("/public/images/image_summer-1.png");
+        flex: 2;
+    }
+}

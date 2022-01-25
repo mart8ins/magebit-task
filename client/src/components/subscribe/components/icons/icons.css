@@ -1,0 +1,81 @@
+   
+   
+.social__icons {
+    width: 75%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.icon__wraper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 1px solid #131821;
+    color: #131821;
+    opacity: 0.3;
+    margin-right: 5px;
+    font-size: 1.3rem;
+}
+
+/* ALL ICONS */
+button[name="faFacebookF"]:hover,
+button[name="faInstagram"]:hover,
+button[name="faTwitter"]:hover,
+button[name="faYoutube"]:hover {
+  cursor: pointer;
+  opacity: 1;
+  color: white;
+}
+
+
+  /* FACEBOOK */
+button[name="faFacebookF"]:hover {
+    background-color: #4267B2;
+    border: 1px solid #4267B2;
+    box-shadow: 0px 20px 40px rgba(19, 24, 33, 0.3);
+}
+
+button[name="faFacebookF"]:active {
+    background-color: #2F4A80;
+    border: 1px solid #2F4A80;
+}
+
+  /* INSTAGRAM */
+button[name="faInstagram"]:hover {
+    background-color: #C13584;
+    border: 1px solid #C13584;
+    box-shadow: 0px 20px 40px rgba(19, 24, 33, 0.3);
+}
+
+button[name="faInstagram"]:active {
+    background-color: #8F2762;
+    border: 1px solid #8F2762;
+}
+
+/* TWITTER  */
+button[name="faTwitter"]:hover {
+    background-color: #1DA1F2;
+    border: 1px solid #1DA1F2;
+    box-shadow: 0px 20px 40px rgba(19, 24, 33, 0.3);
+}
+  
+button[name="faTwitter"]:active {
+    background-color: #177FBF;
+    border: 1px solid #177FBF;
+}
+
+/* YOUTUBE  */
+button[name="faYoutube"]:hover {
+    background-color: #FF0000;
+    border: 1px solid #FF0000;
+    box-shadow: 0px 20px 40px rgba(19, 24, 33, 0.3);
+}
+      
+button[name="faYoutube"]:active {
+    background-color: #CC0000;
+    border: 1px solid #CC0000;
+}
