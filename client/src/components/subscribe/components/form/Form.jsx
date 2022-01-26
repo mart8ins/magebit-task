@@ -1,10 +1,12 @@
 import React, {useState, useEffect} from 'react';
+import axios from "axios";
 import "./form.css";
 import {validateForm} from "./validateForm";
 
 export const Form = ({setSubscribeSuccess}) => {
     const [valid, setValid] = useState(false);
-    const [errorMessage, setErrorMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState(undefined);
+    const [serverError, setServerError] = useState(undefined);
 
     const [typing, setTyping] = useState(false);
 
@@ -34,9 +36,17 @@ export const Form = ({setSubscribeSuccess}) => {
         })
     }
 
-    const submitSubscription = (e) => {
+    const submitSubscription = async (e) => {
         e.preventDefault();
-        setSubscribeSuccess(true);
+        const email = subscription.email;
+        const res = await axios.post("/", {email});
+        if(res.status === 200) {
+            console.log(res.data.message);
+            setSubscribeSuccess(true);
+        } else {
+            console.log(res.data.error);
+            setServerError(res.data.error)
+        }
     }
 
     return <form>
@@ -51,7 +61,7 @@ export const Form = ({setSubscribeSuccess}) => {
             <button onClick={submitSubscription} disabled={!valid}>&#8594;</button>
         </div>
     </div>
-    <p>{!valid && errorMessage}</p>
+    <p>{(!valid && errorMessage) || serverError}</p>
     <div>
         <label htmlFor="terms">
             <input
