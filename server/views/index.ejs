@@ -66,6 +66,9 @@
                 <td><%= subscription.EMAIL %></td>
                 <td><%= subscription.PROVIDER %></td>
                 <td><%= subscription.DATE %></td>
+                <td><form style="float: right" action="/subscriptions?deleteEmail=<%= subscription.EMAIL %>" method="POST">
+                    <button>Delete</button>
+                </form></td>
               </tr>
             <%}%>
            </tr>
