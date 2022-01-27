@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        table {
+          font-family: arial, sans-serif;
+          border-collapse: collapse;
+          width: 100%;
+        }
+        
+        td, th {
+          border: 1px solid #dddddd;
+          text-align: left;
+          padding: 8px;
+        }
+
+        th {
+            text-align: center;
+        }
+        
+        tr:nth-child(even) {
+          background-color: #dddddd;
+        }
+        </style>
+    <title>Subscriptions</title>
+</head>
+<body style="width:70%; margin: 50px auto;">
+    <h1>Subscriptions! </h1>
+
+    <div style="display: flex; align-items: center">
+        <h3 style="margin-right: 10px;">Filter by provider</h3>
+
+    <% for(let provider of providers) {%>
+        <form style="float: right" action="/subscriptions?provider=<%= provider.PROVIDER %>" method="POST">
+            <button style="margin-left: 5px;"><%= provider.PROVIDER %></button>
+        </form>
+    <%}%>
+    <form style="float: right" action="/subscriptions?provider=all" method="POST">
+        <button style="margin-left: 5px;">All</button>
+    </form>
+    </div>
+
+    <table style="font-size: 1.5rem; border: 1px oslid black;">
+          <tr>
+            <th>Id</th>
+            <th>Subscription
+                <form style="float: right" action="/subscriptions?filterBy=email" method="POST">
+                    <button>Sort</button>
+                </form>
+            </th>
+            <th>Provider
+                <form style="float: right" action="/subscriptions?filterBy=provider" method="POST">
+                    <button>Sort</button>
+                </form>
+            </th>
+            <th>Date
+                <form style="float: right" action="/subscriptions?filterBy=date" method="POST">
+                    <button>Sort</button>
+                </form>
+            </th>
+           
+          </tr>
+          <% for(let subscription of subscriptions) {%>
+                <tr>
+                <td><%= subscription.ID %></td>
+                <td><%= subscription.EMAIL %></td>
+                <td><%= subscription.PROVIDER %></td>
+                <td><%= subscription.DATE %></td>
+              </tr>
+            <%}%>
+           </tr>
+      </table>`;
+</body>
+</html>
