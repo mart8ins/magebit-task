@@ -24,9 +24,10 @@
         </style>
     <title>Subscriptions</title>
 </head>
+
+
 <body style="width:70%; margin: 50px auto;">
     <h1>Subscriptions! </h1>
-
     <div style="display: flex; align-items: center">
         <h3 style="margin-right: 10px;">Filter by provider</h3>
 
@@ -40,6 +41,14 @@
     </form>
     </div>
 
+    <form action="/subscriptions" method="post">
+        <input type="email" name="search"/>
+        <button>Search</button>
+    </form>
+    <form action="/subscriptions" method="post">
+        <input name="clear" value="clear" type="hidden"/>
+        <button>Clear search results</button>
+    </form>
 
     <table style="font-size: 1.5rem; border: 1px oslid black;">
           <tr>
@@ -61,18 +70,25 @@
             </th>
            
           </tr>
+          <% if(subscriptions.length) {%> 
+            
           <% for(let subscription of subscriptions) {%>
                 <tr>
-                <td><%= subscription.ID %></td>
-                <td><%= subscription.EMAIL %></td>
-                <td><%= subscription.PROVIDER %></td>
-                <td><%= subscription.DATE %></td>
-                <td><form style="float: right" action="/subscriptions?provider=<%= lastProvider %>&filterBy=<%= lastFilterBy %>&deleteEmail=<%= subscription.EMAIL %>" method="post">
-                    <button>Delete</button>
-                </form></td>
-              </tr>
-            <%}%>
-           </tr>
-      </table>`;
+                    <td><%= subscription.ID %></td>
+                    <td><%= subscription.EMAIL %></td>
+                    <td><%= subscription.PROVIDER %></td>
+                    <td><%= subscription.DATE %></td>
+                    <td>
+                        <form style="float: right" action="/subscriptions?provider=<%= lastProvider %>&filterBy=<%= lastFilterBy %>&deleteEmail=<%= subscription.EMAIL %>" method="post">
+                        <button>Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            <%} } else {%>
+                <tr><td colspan='4'>Email not found</td></tr>
+            <%} %>
+           
+      </table>
 </body>
 </html>
+

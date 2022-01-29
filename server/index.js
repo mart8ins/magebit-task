@@ -1,5 +1,4 @@
 const express = require("express");
-const axios = require("axios");
 const app = express();
 const path = require("path");
 const db = require("../db.js");
@@ -57,6 +56,9 @@ app.get("/subscriptions", async (req, res) => {
 });
 
 app.post("/subscriptions", async (req, res) => {
+    const emailSearch = req.body.search;
+    const clearEmail = req.body.clear;
+
     // query
     let lastFilterBy = "id";
     let lastProvider = "all";
@@ -75,20 +77,34 @@ app.post("/subscriptions", async (req, res) => {
                 .query(`DELETE FROM EMAILS WHERE EMAIL='${deleteEmail}'`);
         }
 
-        const [subs] = await db
-            .promise()
-            .query(
-                `SELECT * FROM EMAILS ${
-                    lastProvider && lastProvider !== "all"
-                        ? "WHERE " + "PROVIDER = " + "'" + lastProvider + "'"
-                        : ""
-                } ${
-                    lastFilterBy && lastFilterBy !== "id"
-                        ? "ORDER BY " + lastFilterBy
-                        : ""
-                } ${lastFilterBy && lastFilterBy === "date" ? "DESC" : ""}`
-            );
-        subscriptions = subs;
+        if (!emailSearch) {
+            const [subs] = await db
+                .promise()
+                .query(
+                    `SELECT * FROM EMAILS ${
+                        lastProvider && lastProvider !== "all"
+                            ? "WHERE " +
+                              "PROVIDER = " +
+                              "'" +
+                              lastProvider +
+                              "'"
+                            : ""
+                    } ${
+                        lastFilterBy && lastFilterBy !== "id"
+                            ? "ORDER BY " + lastFilterBy
+                            : ""
+                    } ${lastFilterBy && lastFilterBy === "date" ? "DESC" : ""}`
+                );
+            subscriptions = subs;
+        } else if (clearEmail) {
+            const [subs] = await db.promise().query(`SELECT * FROM EMAILS`);
+            subscriptions = subs;
+        } else {
+            const [subs] = await db
+                .promise()
+                .query(`SELECT * FROM EMAILS WHERE EMAIL='${emailSearch}'`);
+            subscriptions = subs;
+        }
 
         const [prov] = await db
             .promise()
