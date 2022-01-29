@@ -34,6 +34,8 @@ app.post("/", async (req, res) => {
 });
 
 app.get("/subscriptions", async (req, res) => {
+    const lastProvider = "";
+    const lastFilterBy = "";
     try {
         const [subscriptions] = await db
             .promise()
@@ -43,52 +45,62 @@ app.get("/subscriptions", async (req, res) => {
             .promise()
             .query(`SELECT DISTINCT PROVIDER FROM EMAILS`);
 
-        res.render("index", { subscriptions, providers });
+        res.render("index", {
+            subscriptions,
+            providers,
+            lastProvider,
+            lastFilterBy,
+        });
     } catch (e) {
         console.log(e);
     }
 });
 
 app.post("/subscriptions", async (req, res) => {
+    // query
+    let lastFilterBy = "id";
+    let lastProvider = "all";
+    // data
     let subscriptions;
     let providers;
 
     try {
-        if (req.query.filterBy) {
-            const { filterBy } = req.query;
-            const [subs] = await db
-                .promise()
-                .query(
-                    `SELECT * FROM EMAILS ORDER BY ${filterBy} ${
-                        filterBy === "date" ? "DESC" : ""
-                    }`
-                );
-            subscriptions = subs;
-        } else if (req.query.provider && req.query.provider !== "all") {
-            const { provider } = req.query;
-            const [subs] = await db
-                .promise()
-                .query(`SELECT * FROM EMAILS WHERE PROVIDER = '${provider}'`);
-            subscriptions = subs;
-        } else if (req.query.deleteEmail) {
+        if (req.query.filterBy) lastFilterBy = req.query.filterBy;
+        if (req.query.provider) lastProvider = req.query.provider;
+
+        if (req.query.deleteEmail) {
             const { deleteEmail } = req.query;
             await db
                 .promise()
                 .query(`DELETE FROM EMAILS WHERE EMAIL='${deleteEmail}'`);
-            const [subs] = await db
-                .promise()
-                .query(`SELECT * FROM EMAILS ORDER BY DATE ASC`);
-            subscriptions = subs;
-        } else {
-            const [subs] = await db.promise().query(`SELECT * FROM EMAILS`);
-            subscriptions = subs;
         }
+
+        const [subs] = await db
+            .promise()
+            .query(
+                `SELECT * FROM EMAILS ${
+                    lastProvider && lastProvider !== "all"
+                        ? "WHERE " + "PROVIDER = " + "'" + lastProvider + "'"
+                        : ""
+                } ${
+                    lastFilterBy && lastFilterBy !== "id"
+                        ? "ORDER BY " + lastFilterBy
+                        : ""
+                } ${lastFilterBy && lastFilterBy === "date" ? "DESC" : ""}`
+            );
+        subscriptions = subs;
 
         const [prov] = await db
             .promise()
             .query(`SELECT DISTINCT PROVIDER FROM EMAILS`);
         providers = prov;
-        res.render("index", { subscriptions, providers });
+
+        res.render("index", {
+            subscriptions,
+            providers,
+            lastProvider,
+            lastFilterBy,
+        });
     } catch (e) {
         console.log(e);
     }

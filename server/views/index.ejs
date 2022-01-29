@@ -31,30 +31,31 @@
         <h3 style="margin-right: 10px;">Filter by provider</h3>
 
     <% for(let provider of providers) {%>
-        <form style="float: right" action="/subscriptions?provider=<%= provider.PROVIDER %>" method="POST">
-            <button style="margin-left: 5px;"><%= provider.PROVIDER %></button>
+        <form style="float: right" action="/subscriptions?provider=<%= provider.PROVIDER %>&filterBy=id" method="POST">
+            <button onClick="setLastProvider(e)" style="margin-left: 5px;"><%= provider.PROVIDER %></button>
         </form>
     <%}%>
-    <form style="float: right" action="/subscriptions?provider=all" method="POST">
+    <form style="float: right" action="/subscriptions?provider=all&filterBy=id" method="POST">
         <button style="margin-left: 5px;">All</button>
     </form>
     </div>
+
 
     <table style="font-size: 1.5rem; border: 1px oslid black;">
           <tr>
             <th>Id</th>
             <th>Subscription
-                <form style="float: right" action="/subscriptions?filterBy=email" method="POST">
+                <form style="float: right" action="/subscriptions?provider=<%= lastProvider %>&filterBy=email" method="POST">
                     <button>Sort</button>
                 </form>
             </th>
             <th>Provider
-                <form style="float: right" action="/subscriptions?filterBy=provider" method="POST">
+                <form style="float: right" action="/subscriptions?provider=<%= lastProvider %>&filterBy=provider" method="POST">
                     <button>Sort</button>
                 </form>
             </th>
             <th>Date
-                <form style="float: right" action="/subscriptions?filterBy=date" method="POST">
+                <form style="float: right" action="/subscriptions?provider=<%= lastProvider %>&filterBy=date" method="POST">
                     <button>Sort</button>
                 </form>
             </th>
@@ -66,7 +67,7 @@
                 <td><%= subscription.EMAIL %></td>
                 <td><%= subscription.PROVIDER %></td>
                 <td><%= subscription.DATE %></td>
-                <td><form style="float: right" action="/subscriptions?deleteEmail=<%= subscription.EMAIL %>" method="POST">
+                <td><form style="float: right" action="/subscriptions?provider=<%= lastProvider %>&filterBy=<%= lastFilterBy %>&deleteEmail=<%= subscription.EMAIL %>" method="post">
                     <button>Delete</button>
                 </form></td>
               </tr>
