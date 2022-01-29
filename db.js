@@ -5,5 +5,5 @@ module.exports = mysql.createConnection({
     user: "root",
     password: "test12345",
     database: "subscriptions",
-    port: 3307,
+    port: 3306,
 });
