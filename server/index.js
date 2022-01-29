@@ -10,6 +10,15 @@ app.set("views", __dirname + "/views");
 
 const PORT = process.env.PORT || 3001;
 
+let currentPage = 1;
+const numberPerPage = 10;
+
+const paginate = (currentPage, numberPerPage, dataBeforePagination) => {
+    const trimStart = (currentPage - 1) * numberPerPage;
+    const trimEnd = trimStart + numberPerPage;
+    return dataBeforePagination.slice(trimStart, trimEnd);
+};
+
 app.post("/", async (req, res) => {
     const { email } = req.body;
     let atindex = email.indexOf("@");
@@ -35,20 +44,36 @@ app.post("/", async (req, res) => {
 app.get("/subscriptions", async (req, res) => {
     const lastProvider = "";
     const lastFilterBy = "";
+    let dataBeforePagination;
+    let subscriptions;
+
     try {
-        const [subscriptions] = await db
+        const [subs] = await db
             .promise()
             .query(`SELECT * FROM EMAILS ORDER BY DATE ASC`);
-
+        dataBeforePagination = subs;
         const [providers] = await db
             .promise()
             .query(`SELECT DISTINCT PROVIDER FROM EMAILS`);
+
+        // PAGINATION
+        const numberOfPages = Math.ceil(
+            dataBeforePagination.length / numberPerPage
+        );
+        subscriptions = paginate(
+            currentPage,
+            numberPerPage,
+            dataBeforePagination
+        );
 
         res.render("index", {
             subscriptions,
             providers,
             lastProvider,
             lastFilterBy,
+            currentPage,
+            numberOfPages,
+            numberPerPage,
         });
     } catch (e) {
         console.log(e);
@@ -63,6 +88,7 @@ app.post("/subscriptions", async (req, res) => {
     let lastFilterBy = "id";
     let lastProvider = "all";
     // data
+    let dataBeforePagination;
     let subscriptions;
     let providers;
 
@@ -95,15 +121,15 @@ app.post("/subscriptions", async (req, res) => {
                             : ""
                     } ${lastFilterBy && lastFilterBy === "date" ? "DESC" : ""}`
                 );
-            subscriptions = subs;
+            dataBeforePagination = subs;
         } else if (clearEmail) {
             const [subs] = await db.promise().query(`SELECT * FROM EMAILS`);
-            subscriptions = subs;
+            dataBeforePagination = subs;
         } else {
             const [subs] = await db
                 .promise()
                 .query(`SELECT * FROM EMAILS WHERE EMAIL='${emailSearch}'`);
-            subscriptions = subs;
+            dataBeforePagination = subs;
         }
 
         const [prov] = await db
@@ -111,11 +137,32 @@ app.post("/subscriptions", async (req, res) => {
             .query(`SELECT DISTINCT PROVIDER FROM EMAILS`);
         providers = prov;
 
+        const numberOfPages = Math.ceil(
+            dataBeforePagination.length / numberPerPage
+        );
+
+        if (req.query.go === "forward") {
+            if (currentPage < numberOfPages) currentPage++;
+        }
+        if (req.query.go === "back") {
+            if (currentPage >= 2) currentPage--;
+        }
+
+        // PAGINATION
+        subscriptions = paginate(
+            currentPage,
+            numberPerPage,
+            dataBeforePagination
+        );
+
         res.render("index", {
             subscriptions,
             providers,
             lastProvider,
             lastFilterBy,
+            currentPage,
+            numberOfPages,
+            numberPerPage,
         });
     } catch (e) {
         console.log(e);

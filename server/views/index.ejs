@@ -89,6 +89,13 @@
             <%} %>
            
       </table>
+      <form action="/subscriptions?provider=<%= lastProvider %>&filterBy=<%= lastFilterBy %>&go=back" method="POST">
+        <button>&#8592;</button>
+      </form>
+      <p>Page <%= currentPage %> from <%= numberOfPages %> (showing <%= subscriptions.length %> records)</p>
+      <form action="/subscriptions?provider=<%= lastProvider %>&filterBy=<%= lastFilterBy %>&go=forward" method="POST">
+        <button>&#8594;</button>
+      </form>
 </body>
 </html>
 
